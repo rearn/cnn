@@ -1,5 +1,9 @@
 <template>
-  <canvas id="canvas"></canvas>
+  <div>
+    <input v-on:change="selectFile" type="file" id="file">
+    <canvas id="canvas"></canvas>
+    <button v-on:click="send()">実行</button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -9,39 +13,42 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 @Component
 export default class HelloWorld extends Vue {
   private worker;
-  @Prop({}) private file: any
-   
-  
-  @Watch('file')
-  drawCanvas() {
-    var image = new Image();
-    image.src = this.file;
-    let _this = this;
-    image.onload = () => {
-      _this.$el.width = image.width;
-      _this.$el.height = image.height;
-      _this.$el.getContext('2d').drawImage(image, 0, 0);
-      _this.worker.postMessage({
-        data: _this.$el.getContext('2d').getImageData(0,0,_this.$el.width,_this.$el.height).data,
-        width: _this.$el.width,
-        height: _this.$el.height,
-      });
-/*
-      cnn(
-        _this.$el.getContext('2d').getImageData(0,0,_this.$el.width,_this.$el.height).data,
-        _this.$el.width,
-        _this.$el.height,
-        _this.$el
-      );
-      */
-    };
+  private file;
+
+  send() {
+    let canvas = this.$el.getElementsByTagName('canvas')[0];
+    const ctx = canvas.getContext('2d');
+    this.worker.postMessage({
+      data: ctx.getImageData(0,0,canvas.width,canvas.height).data,
+      width: canvas.width,
+      height: canvas.height,
+    });
   }
 
+  selectFile(e) {
+    var file = e.target.files;
+    var reader = new FileReader();
+    //ファイルが複数読み込まれた際に、1つめを選択
+    reader.readAsDataURL(file[0]);
+    //ファイルが読み込めたら
+    let _this = this;
+    reader.onload = function () {
+      var image = new Image();
+      image.src = reader.result;
+      let canvas = _this.$el.getElementsByTagName('canvas')[0];
+      image.onload = () => {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0);
+      };
+    };
+  }
   mounted() {
     this.worker = new Worker('./index.js');
     const _this = this;
     this.worker.onmessage = (e) => {
-      const ctx = _this.$el.getContext('2d');
+      const ctx = _this.$el.getElementsByTagName('canvas')[0].getContext('2d');
       ctx.putImageData(e.data, 0, 0);
     }
   }
