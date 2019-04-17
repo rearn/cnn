@@ -4,6 +4,18 @@
     <canvas id="canvas"></canvas>
     <button v-on:click="send()">実行</button>
     <button v-on:click="stop()">停止</button>
+    <div>
+      <span>aTemp</span>
+      <div v-for="(v, i) in aTemp" v-bind:key="i">
+        <input class="temp" type="text" v-for="(w, j) in v" v-model="aTemp[i][j]" v-bind:key="j">
+      </div>
+    </div>
+    <div>
+      <span>bTemp</span>
+      <div v-for="(v, i) in bTemp" v-bind:key="i">
+        <input class="temp" type="text" v-for="(w, j) in v" v-model="bTemp[i][j]" v-bind:key="j">
+      </div>
+    </div>
     <span>実行回数: {{ count }}</span>
   </div>
 </template>
@@ -14,8 +26,17 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 @Component
 export default class HelloWorld extends Vue {
   private worker;
-  private file;
   private count = 0;
+  private aTemp = [
+    [0, 0, 0],
+    [0, 1, 0],
+    [0, 0, 0],
+  ];
+  private bTemp = [
+    [-1, -1, -1],
+    [-1,  8, -1],
+    [-1, -1, -1],
+  ];
 
   send() {
     let canvas = this.$el.getElementsByTagName('canvas')[0];
@@ -25,10 +46,13 @@ export default class HelloWorld extends Vue {
       data: ctx.getImageData(0,0,canvas.width,canvas.height).data,
       width: canvas.width,
       height: canvas.height,
+      aTemp: this.aTemp,
+      bTemp: this.bTemp,
     });
   }
 
   stop() {
+    console.log(this.aTemp)
     this.worker.terminate();
     setTimeout(this.setupWorker, 1000);
   }
@@ -68,4 +92,7 @@ export default class HelloWorld extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+input.temp {
+  width: 2em;
+}
 </style>

@@ -10,7 +10,7 @@ var aTemp = [
     [0, 1, 0],
     [0, 0, 0],
 ];
-var bTamp = [
+var bTemp = [
     [-1, -1, -1],
     [-1, 8, -1],
     [-1, -1, -1],
@@ -60,7 +60,7 @@ var init = function () {
         x.forEach(function (y, j) {
             for (var i2 = 0; i2 < 3; i2++) {
                 for (var j2 = 0; j2 < 3; j2++) {
-                    sum_bvu[i][j] = sum_bvu[i][j] + vy_data_th[(sum_bvu.length + i + i2 - 1) % sum_bvu.length][(x.length + j + j2 - 1) % x.length] * bTamp[i2][j2];
+                    sum_bvu[i][j] = sum_bvu[i][j] + vy_data_th[(sum_bvu.length + i + i2 - 1) % sum_bvu.length][(x.length + j + j2 - 1) % x.length] * bTemp[i2][j2];
                 }
             }
         });
@@ -221,7 +221,10 @@ var cnnMain = function () {
     });
 };
 onmessage = function (e) {
-    input_image_all(e.data.data, e.data.width, e.data.height);
+    var d = e.data;
+    aTemp = d.aTemp;
+    bTemp = d.bTemp;
+    input_image_all(d.data, d.width, d.height);
     init();
     for (var count = 0; count < rk; count++) {
         cnnMain();
