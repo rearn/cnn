@@ -19,7 +19,7 @@ var tr = -0.3;
 var h = 0.1;
 var rk = 100; // 10000;
 var canvas;
-var imagePrint = function () {
+var imagePrint = function (count) {
     // const ctx = canvas.getContext('2d');
     var arr = new Uint8ClampedArray(4 * vy_data_th.length * vy_data_th[0].length);
     var c = 0;
@@ -27,10 +27,12 @@ var imagePrint = function () {
         var _loop_1 = function (j) {
             var y = vy_data_th[i][j];
             var y2 = (function () {
-                if (y < -1)
+                if (y < -1) {
                     return -1;
-                if (y > 1)
+                }
+                if (y > 1) {
                     return 1;
+                }
                 return y;
             })();
             var y3 = Math.floor(-y2 * 128 + 128);
@@ -45,7 +47,7 @@ var imagePrint = function () {
         }
     }
     var image = new ImageData(arr, vy_data_th.length);
-    postMessage(image);
+    postMessage({ image: image, count: count });
     // ctx.putImageData(image, 0, 0);
 };
 var init = function () {
@@ -218,25 +220,11 @@ var cnnMain = function () {
         });
     });
 };
-/*
-const main = (data: Uint8ClampedArray, width: number, height: number, el: HTMLCanvasElement) => {
-  canvas = el;
-  input_image_all(data, width, height);
-  init();
-  for (let count = 0; count < rk; count++) {
-    console.log(count)
-    cnnMain();
-    imagePrint();
-  }
-};
-*/
 onmessage = function (e) {
     input_image_all(e.data.data, e.data.width, e.data.height);
     init();
     for (var count = 0; count < rk; count++) {
-        console.log(count);
         cnnMain();
-        imagePrint();
+        imagePrint(count);
     }
 };
-// export default main;

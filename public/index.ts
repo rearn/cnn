@@ -23,7 +23,7 @@ const rk = 100;// 10000;
 
 let canvas: HTMLCanvasElement;
 
-const imagePrint = () => {
+const imagePrint = (count: number) => {
   // const ctx = canvas.getContext('2d');
   const arr = new Uint8ClampedArray(4 * vy_data_th.length * vy_data_th[0].length);
   let c = 0;
@@ -31,8 +31,12 @@ const imagePrint = () => {
     for (let j = 0; j < vy_data_th[i].length; j++) {
       const y = vy_data_th[i][j];
       const y2 = (() => {
-        if (y < -1) return -1;
-        if (y > 1) return 1;
+        if (y < -1) {
+          return -1;
+        }
+        if (y > 1) {
+          return 1;
+        }
         return y;
       })();
       const y3 = Math.floor(- y2 * 128 + 128);
@@ -44,7 +48,7 @@ const imagePrint = () => {
     }
   }
   const image = new ImageData(arr, vy_data_th.length);
-  postMessage(image);
+  postMessage({image, count});
   // ctx.putImageData(image, 0, 0);
 };
 
@@ -229,26 +233,11 @@ const cnnMain = () => {
   });
 };
 
-/*
-const main = (data: Uint8ClampedArray, width: number, height: number, el: HTMLCanvasElement) => {
-  canvas = el;
-  input_image_all(data, width, height);
-  init();
-  for (let count = 0; count < rk; count++) {
-    console.log(count)
-    cnnMain();
-    imagePrint();
-  }
-};
-*/
 onmessage = (e) => {
   input_image_all(e.data.data, e.data.width, e.data.height);
   init();
   for (let count = 0; count < rk; count++) {
-    console.log(count);
     cnnMain();
-    imagePrint();
+    imagePrint(count);
   }
 };
-
-// export default main;
