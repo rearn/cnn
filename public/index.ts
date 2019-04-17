@@ -237,6 +237,9 @@ onmessage = (e) => {
   const d = e.data;
   aTemp = d.aTemp;
   bTemp = d.bTemp;
+  tr = d.tr,
+  h = d.h,
+  rk = d.rk,
   input_image_all(d.data, d.width, d.height);
   init();
   for (let count = 0; count < rk; count++) {

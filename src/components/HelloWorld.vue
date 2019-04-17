@@ -2,8 +2,6 @@
   <div>
     <input v-on:change="selectFile" type="file" id="file">
     <canvas id="canvas"></canvas>
-    <button v-on:click="send()">実行</button>
-    <button v-on:click="stop()">停止</button>
     <div>
       <span>aTemp</span>
       <div v-for="(v, i) in aTemp" v-bind:key="i">
@@ -16,6 +14,13 @@
         <input class="temp" type="text" v-for="(w, j) in v" v-model="bTemp[i][j]" v-bind:key="j">
       </div>
     </div>
+    <div>
+      <label>Tr : </label><input type="text" v-model="tr">
+      <label>h : </label><input type="text" v-model="h">
+      <label>Rk : </label><input type="text" v-model="rk">
+    </div>
+    <button v-on:click="send()">実行</button>
+    <button v-on:click="stop()">停止</button>
     <span>実行回数: {{ count }}</span>
   </div>
 </template>
@@ -37,6 +42,9 @@ export default class HelloWorld extends Vue {
     [-1,  8, -1],
     [-1, -1, -1],
   ];
+  private tr = -0.3;
+  private h = 0.1;
+  private rk = 100;// 10000;
 
   send() {
     let canvas = this.$el.getElementsByTagName('canvas')[0];
@@ -48,6 +56,9 @@ export default class HelloWorld extends Vue {
       height: canvas.height,
       aTemp: this.aTemp,
       bTemp: this.bTemp,
+      tr: this.tr,
+      h: this.h,
+      rk: this.rk,
     });
   }
 

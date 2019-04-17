@@ -224,7 +224,10 @@ onmessage = function (e) {
     var d = e.data;
     aTemp = d.aTemp;
     bTemp = d.bTemp;
-    input_image_all(d.data, d.width, d.height);
+    tr = d.tr,
+        h = d.h,
+        rk = d.rk,
+        input_image_all(d.data, d.width, d.height);
     init();
     for (var count = 0; count < rk; count++) {
         cnnMain();
