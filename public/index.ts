@@ -24,7 +24,7 @@ const rk = 100;// 10000;
 let canvas: HTMLCanvasElement;
 
 const imagePrint = () => {
-  const ctx = canvas.getContext('2d');
+  // const ctx = canvas.getContext('2d');
   const arr = new Uint8ClampedArray(4 * vy_data_th.length * vy_data_th[0].length);
   let c = 0;
   for (let i = 0; i < vy_data_th.length; i++) {
@@ -44,7 +44,8 @@ const imagePrint = () => {
     }
   }
   const image = new ImageData(arr, vy_data_th.length);
-  ctx.putImageData(image, 0, 0);
+  postMessage(image);
+  // ctx.putImageData(image, 0, 0);
 };
 
 const init = () => {
@@ -72,7 +73,6 @@ const copy_data = (data: number[][]): number[][] => {
 
 const input_image_all = (data: Uint8ClampedArray, width: number, height: number) => {
   vu_data = input_image(data, width, height);
-  console.log(vu_data[24][24])
   vx_data = copy_data(vu_data);
   vu_data_th = copy_data(vu_data);
   vy_data_th = copy_data(vu_data);
@@ -83,16 +83,14 @@ const input_image_all = (data: Uint8ClampedArray, width: number, height: number)
       vy_data_th[i][j] = -(vu_data[i][j]-128)/128;
       vx_data_th[i][j] = -(vu_data[i][j]-128)/128;
     })
-  })
-  console.log(vu_data_th[24][24], vu_data[24][24]);
+  });
 };
 
 const input_image = (data: Uint8ClampedArray, width: number, height: number) => {
   const a = (Array.from(data))
     .map((v, i) => (i % 4 === 0) ? v : undefined) // 白黒前提
     .filter((v) => v !== undefined);
-  
-  console.log(a[24], a[24]);
+
   return Array.apply(null, Array(width)).map((x, i) => {
     return Array.apply(null, Array(height)).map((y, j) => {
       return a[i * width + j];
@@ -231,7 +229,7 @@ const cnnMain = () => {
   });
 };
 
-
+/*
 const main = (data: Uint8ClampedArray, width: number, height: number, el: HTMLCanvasElement) => {
   canvas = el;
   input_image_all(data, width, height);
@@ -242,5 +240,15 @@ const main = (data: Uint8ClampedArray, width: number, height: number, el: HTMLCa
     imagePrint();
   }
 };
+*/
+onmessage = (e) => {
+  input_image_all(e.data.data, e.data.width, e.data.height);
+  init();
+  for (let count = 0; count < rk; count++) {
+    console.log(count);
+    cnnMain();
+    imagePrint();
+  }
+};
 
-export default main;
+// export default main;
