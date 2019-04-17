@@ -20,7 +20,6 @@
       <label>Rk : </label><input type="text" v-model="rk">
     </div>
     <button v-on:click="send()">実行</button>
-    <button v-on:click="stop()">停止</button>
     <span>実行回数: {{ count }}</span>
   </div>
 </template>
