@@ -20,7 +20,6 @@ var h = 0.1;
 var rk = 100; // 10000;
 var canvas;
 var imagePrint = function (count) {
-    // const ctx = canvas.getContext('2d');
     var arr = new Uint8ClampedArray(4 * vy_data_th.length * vy_data_th[0].length);
     var c = 0;
     for (var i = 0; i < vy_data_th.length; i++) {
@@ -48,7 +47,6 @@ var imagePrint = function (count) {
     }
     var image = new ImageData(arr, vy_data_th.length);
     postMessage({ image: image, count: count });
-    // ctx.putImageData(image, 0, 0);
 };
 var init = function () {
     sum_bvu = Array.apply(null, Array(vu_data_th.length)).map(function () {

@@ -19,12 +19,11 @@ const bTemp = [
 const tr = -0.3;
 
 const h = 0.1;
-const rk = 100;// 10000;
+const rk = 100; // 10000;
 
 let canvas: HTMLCanvasElement;
 
 const imagePrint = (count: number) => {
-  // const ctx = canvas.getContext('2d');
   const arr = new Uint8ClampedArray(4 * vy_data_th.length * vy_data_th[0].length);
   let c = 0;
   for (let i = 0; i < vy_data_th.length; i++) {
@@ -49,7 +48,6 @@ const imagePrint = (count: number) => {
   }
   const image = new ImageData(arr, vy_data_th.length);
   postMessage({image, count});
-  // ctx.putImageData(image, 0, 0);
 };
 
 const init = () => {
