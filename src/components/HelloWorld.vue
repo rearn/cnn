@@ -29,7 +29,7 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class HelloWorld extends Vue {
-  private worker;
+  private worker: Worker;
   private count = 0;
   private aTemp = [
     [0, 0, 0],
